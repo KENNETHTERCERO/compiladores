@@ -1,0 +1,97 @@
+<div class="content table-responsive-xl" role="main">
+  <div
+    class="card-container"
+    (drop)="onDrop($event)"
+    (dragover)="allowDrop($event)">
+    <a class="card">
+      Arrastre un archivo
+    </a>
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr class="table-primary">
+        <th style="text-align: center;">Despliegue de archivo</th>
+        <th style="text-align: center;">V</th>
+        <th style="text-align: center;">T</th>
+        <!-- <th style="text-align: center;">A</th>
+        <th style="text-align: center;">Matriz de Transición 1</th>
+        <th style="text-align: center;">Matriz de Transición 2B</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr><!-- Despliegue de archivo -->
+        <td>
+          <ul *ngFor="let despliegue of textArray">
+            {{despliegue}}
+          </ul>
+        </td>
+        <td><!-- V -->
+          <table>
+            <tr *ngFor="let variable of V" >
+              {{variable}}
+            </tr>
+          </table>
+        </td>
+        <td><!-- e -->
+          <table>
+            <tr *ngFor="let terminal of T">
+              {{terminal}}
+            </tr>
+          </table>
+        </td>
+        <!-- A -->
+          <!--<td> <table>
+            <tr *ngFor="let a of A">
+              {{a}}
+            </tr>
+          </table> </td>-->
+
+
+          <!--<td> <table>
+            <tr class="centerText">
+              <td *ngIf="S.length > 0" class="centerText bordeAbajo">Estado</td>
+              <td *ngFor="let l of S" class="centerText bordeAbajo">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{l}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+            </tr>
+            <tr class="centerText" *ngFor="let estadoInicial of functionEstates()">
+              <td >
+                {{estadoInicial.clave}}
+              </td>
+              <td *ngFor="let estado of estadoInicial.valor" class="bordeIzquierdo">
+                {{estado.valor}}
+              </td>
+            </tr>
+          </table> </td>-->
+
+
+          <!--<td> <table>
+            <tr class="centerText">
+              <td *ngIf="S.length > 0" class="centerText bordeAbajo">Estado</td>
+              <td *ngFor="let l of SmenosEpsilon" class="centerText bordeAbajo">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{l}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              </td>
+              <td class="centerText bordeAbajo">
+                Composición
+              </td>
+            </tr>
+            <tr class="centerText" *ngFor="let estado of AFNEstados">
+              <td>
+                {{estado.estadoInicial}}
+              </td>
+              <td >
+                {{estado.valor[0].estadoFinal}}
+              </td>
+              <td>
+                {{estado.valor[1].estadoFinal}}
+              </td>
+              <td>
+                {{estado.valor[2].composicion}}
+              </td>
+            </tr>
+          </table> </td>-->
+
+      </tr>
+    </tbody>
+  </table>
+</div>
