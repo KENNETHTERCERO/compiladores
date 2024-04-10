@@ -13,6 +13,8 @@ export class AppComponent {
   textArray: string[] = [];
   V: string[] = [];
   T: string[] = [];
+  variables: string[] = [];
+  productions: string[] = [];
 
   onDrop(e: any) {
     e.stopPropagation();
@@ -46,6 +48,7 @@ export class AppComponent {
   manageArray(array: string[]){
     this.findVariables(array);
     this.findTerminales(array);
+    this.findVariablesAndProductions(array);
   }
 
   findVariables(array: string[]){
@@ -94,6 +97,24 @@ export class AppComponent {
         });
       }
     });
+    const terminalesLimpios = [];
+    for(let i = 0; i < this.T.length; i++) {
+      terminalesLimpios.push(this.T[i].replaceAll("'", ""));
+    }
+    this.T = terminalesLimpios;
   }
 
+  findVariablesAndProductions(array: string[]){
+    array.forEach(line => {
+      const divide = line.split(":");
+      this.variables.push(divide[0]);
+      if(divide[1].split("|").length > 1){
+        const withEnter = divide[1].replaceAll("|", "<br/>");
+        this.productions.push(withEnter);
+      }
+      else{
+        this.productions.push(divide[1]);
+      }
+    });
+  }
 }
