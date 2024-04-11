@@ -13,8 +13,7 @@ export class AppComponent {
   textArray: string[] = [];
   V: string[] = [];
   T: string[] = [];
-  variables: string[] = [];
-  productions: string[] = [];
+  objectVarProductions = [{variable: "", production: "" }];
 
   onDrop(e: any) {
     e.stopPropagation();
@@ -105,16 +104,10 @@ export class AppComponent {
   }
 
   findVariablesAndProductions(array: string[]){
-    array.forEach(line => {
-      const divide = line.split(":");
-      this.variables.push(divide[0]);
-      if(divide[1].split("|").length > 1){
-        const withEnter = divide[1].replaceAll("|", "<br/>");
-        this.productions.push(withEnter);
-      }
-      else{
-        this.productions.push(divide[1]);
-      }
+    this.objectVarProductions = [];
+    array.forEach(element =>{
+      const separate = element.split(":");
+      this.objectVarProductions.push({variable: separate[0], production: separate[1].replaceAll("|", "<br/>").replaceAll("'", "")});
     });
   }
 }

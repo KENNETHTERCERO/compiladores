@@ -51,20 +51,13 @@
               </td>
             </thead>
             <tbody>
-              <td>
-                <table>
-                  <tr class="bordeAbajo" *ngFor="let variable of variables">
-                    {{variable}}
-                  </tr>
-                </table>
-              </td>
-              <td>
-                <table class="">
-                  <tr *ngFor="let production of productions">
-                    {{production}}
-                  </tr>
-                </table>
-              </td>
+              <tr *ngFor="let object of objectVarProductions">
+                <td>
+                  {{object.variable}}
+                </td>
+                <td [innerHTML]="object.production">
+                </td>
+              </tr>
             </tbody>
           </table>
         </td>
