@@ -13,8 +13,8 @@
         <th style="text-align: center;">Despliegue de archivo</th>
         <th style="text-align: center;">V</th>
         <th style="text-align: center;">T</th>
-        <!-- <th style="text-align: center;">A</th>
-        <th style="text-align: center;">Matriz de Transición 1</th>
+        <th style="text-align: center;">Variables y Producciones</th>
+        <!-- <th style="text-align: center;">Matriz de Transición 1</th>
         <th style="text-align: center;">Matriz de Transición 2B</th> -->
       </tr>
     </thead>
@@ -40,11 +40,27 @@
           </table>
         </td>
         <!-- A -->
-          <!--<td> <table>
-            <tr *ngFor="let a of A">
-              {{a}}
-            </tr>
-          </table> </td>-->
+        <td>
+          <table class="table table-bordered">
+            <thead>
+              <td>
+                Variable
+              </td>
+              <td>
+                Producción
+              </td>
+            </thead>
+            <tbody>
+              <tr *ngFor="let object of objectVarProductions">
+                <td>
+                  {{object.variable}}
+                </td>
+                <td [innerHTML]="object.production">
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
 
 
           <!--<td> <table>
