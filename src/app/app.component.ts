@@ -96,11 +96,7 @@ export class AppComponent {
         });
       }
     });
-    const terminalesLimpios = [];
-    for(let i = 0; i < this.T.length; i++) {
-      terminalesLimpios.push(this.T[i].replaceAll("'", ""));
-    }
-    this.T = terminalesLimpios;
+    this.T = this.T.map(terminal => terminal.replaceAll("'", ""));
   }
 
   findVariablesAndProductions(array: string[]){
