@@ -1,8 +1,5 @@
 <div class="content table-responsive-xl" role="main">
-  <div
-    class="card-container"
-    (drop)="onDrop($event)"
-    (dragover)="allowDrop($event)">
+  <div class="card-container" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
     <a class="card">
       Arrastre un archivo
     </a>
@@ -14,8 +11,8 @@
         <th style="text-align: center;">V</th>
         <th style="text-align: center;">T</th>
         <th style="text-align: center;">Variables y Producciones</th>
-        <!-- <th style="text-align: center;">Matriz de Transición 1</th>
-        <th style="text-align: center;">Matriz de Transición 2B</th> -->
+        <th style="text-align: center;">Grámatica Sin Recursividad</th>
+        <!-- <th style="text-align: center;">Matriz de Transición 2B</th> -->
       </tr>
     </thead>
     <tbody>
@@ -27,7 +24,7 @@
         </td>
         <td><!-- V -->
           <table>
-            <tr *ngFor="let variable of V" >
+            <tr *ngFor="let variable of V">
               {{variable}}
             </tr>
           </table>
@@ -55,7 +52,32 @@
                 <td>
                   {{object.variable}}
                 </td>
-                <td [innerHTML]="object.production">
+                <td>
+                  <!-- <td [innerHTML]="object.production"> -->
+                  {{object.production}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td>
+          <table class="table table-bordered">
+            <thead>
+              <td>
+                Variable
+              </td>
+              <td>
+                Producción
+              </td>
+            </thead>
+            <tbody>
+              <tr *ngFor="let object of variablesAndTerminalsWRecursivityShow">
+                <td>
+                  {{object.variable}}
+                </td>
+                <td>
+                  <!-- <td [innerHTML]="object.production"> -->
+                  {{object.production}}
                 </td>
               </tr>
             </tbody>
@@ -63,25 +85,7 @@
         </td>
 
 
-          <!--<td> <table>
-            <tr class="centerText">
-              <td *ngIf="S.length > 0" class="centerText bordeAbajo">Estado</td>
-              <td *ngFor="let l of S" class="centerText bordeAbajo">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{l}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </td>
-            </tr>
-            <tr class="centerText" *ngFor="let estadoInicial of functionEstates()">
-              <td >
-                {{estadoInicial.clave}}
-              </td>
-              <td *ngFor="let estado of estadoInicial.valor" class="bordeIzquierdo">
-                {{estado.valor}}
-              </td>
-            </tr>
-          </table> </td>-->
-
-
-          <!--<td> <table>
+        <!--<td> <table>
             <tr class="centerText">
               <td *ngIf="S.length > 0" class="centerText bordeAbajo">Estado</td>
               <td *ngFor="let l of SmenosEpsilon" class="centerText bordeAbajo">

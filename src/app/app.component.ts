@@ -13,7 +13,10 @@ export class AppComponent {
   textArray: string[] = [];
   V: string[] = [];
   T: string[] = [];
-  objectVarProductions = [{variable: "", production: "" }];
+  objectVarProductions = [{ variable: "", production: "" }];
+  objectVariableAndTerminales = [{ variable: "" as string, production: [] as string[] }];
+  variableAndTerminalesSinRecursividad = [{ variable: "" as string, production: [[]] as string[][] }];
+  variablesAndTerminalsWRecursivityShow = [{ variable: "" as string, production: "" as string }];
 
   onDrop(e: any) {
     e.stopPropagation();
@@ -44,66 +47,111 @@ export class AppComponent {
     this.T = [];
   }
 
-  manageArray(array: string[]){
+  manageArray(array: string[]) {
     this.findVariables(array);
     this.findTerminales(array);
     this.findVariablesAndProductions(array);
+    this.cleanRecursive(array);
   }
 
-  findVariables(array: string[]){
+  findVariables(array: string[]) {
     array.forEach(element => {
-      if(!this.V.includes(element.split(':')[0])){
+      if (!this.V.includes(element.split(':')[0])) {
         this.V.push(element.split(':')[0]);
       }
     });
   }
 
-  findTerminales(array: string[]){
+  findTerminales(array: string[]) {
     array.forEach(element => {
-      const isUnique = element.split(':')[1].split('|').length > 1;
-      if(!isUnique){
-        if(!this.T.includes(element.split(':')[1])){
-          const variables = element.split(':')[1].split('');
-          let variableFound = false;
-          variables.forEach(variable =>{
-            if(this.V.includes(variable)){
-              variableFound = true;
-              return;
+      element.split(':')[1].split('|').forEach(line => {
+        line.split('').forEach(position => {
+          if (!this.V.includes(position)) {
+            if (!this.T.includes(position)) {
+              this.T.push(position);
             }
-          });
-          if(!variableFound){
-            this.T.push(element.split(':')[1]);
-          }
-        }
-      }
-      if(isUnique){
-        const terminales = element.split(':')[1].split('|');
-        terminales.forEach(terminal => {
-          const variables = terminal.split('');
-          let variableFound = false;
-          variables.forEach(variable =>{
-            if(this.V.includes(variable)){
-              variableFound = true;
-              return;
-            }
-          });
-          if(variableFound){
-            return;
-          }
-          if(!this.T.includes(terminal)){
-            this.T.push(terminal);
           }
         });
-      }
+      });
     });
     this.T = this.T.map(terminal => terminal.replaceAll("'", ""));
   }
 
-  findVariablesAndProductions(array: string[]){
+  findVariablesAndProductions(array: string[]) {
     this.objectVarProductions = [];
-    array.forEach(element =>{
+    array.forEach(element => {
       const separate = element.split(":");
-      this.objectVarProductions.push({variable: separate[0], production: separate[1].replaceAll("|", "<br/>").replaceAll("'", "")});
+      if (separate[1].split("|").length > 1) {
+        separate[1].replaceAll("'", "").split("|").forEach(element => {
+          this.objectVarProductions.push({ variable: separate[0], production: element });
+        });
+      }
+      else {
+        this.objectVarProductions.push({ variable: separate[0], production: separate[1].replaceAll("'", "") });
+      }
+    });
+  }
+
+  cleanRecursive(array: string[]) {
+    this.variableAndTerminalesSinRecursividad = [];
+    this.separateVariablesAndProductions(array);
+    this.objectVariableAndTerminales.forEach(production => {
+      const order = production.production.sort((a, b) => a.length - b.length);
+      console.log(order);
+      const variable = production.variable + "!";
+      order.forEach(prod => {
+        const terminalsInProduction = prod.split("");
+        if (production.variable === terminalsInProduction[0]) {
+          const productionUnion = [];
+          const productEpsilon = ["e"];
+          const product = [];
+          for (let i = 1; i < terminalsInProduction.length; i++) {
+            product.push(terminalsInProduction[i]);
+          }
+          product.push(variable);
+          productionUnion.push(product);
+          productionUnion.push(productEpsilon);
+          this.variableAndTerminalesSinRecursividad.push({ variable: variable, production: productionUnion });
+        } else {
+          const product = [];
+          if (terminalsInProduction.length === 1) {
+            if (this.T.includes(terminalsInProduction[0])) {
+              product.push(terminalsInProduction);
+            } else {
+              terminalsInProduction.push(variable)
+              product.push(terminalsInProduction);
+            }
+          }
+          this.variableAndTerminalesSinRecursividad.push({ variable: production.variable, production: product });
+        }
+      });
+    });
+    this.variablesAndTerminalsWRecursivityShow = [];
+    this.variableAndTerminalesSinRecursividad.forEach(line => {
+      let productionString = "";
+      line.production.forEach(lineProd => {
+        lineProd.forEach(lineProduction => {
+          productionString += lineProduction;
+        });
+        productionString += " | ";
+      });
+      productionString = productionString.substring(0, productionString.length - 2);
+      this.variablesAndTerminalsWRecursivityShow.push({ variable: line.variable, production: productionString });
+    });
+    console.log(this.variableAndTerminalesSinRecursividad);
+  }
+
+  separateVariablesAndProductions(array: string[]) {
+    this.objectVariableAndTerminales = [];
+    array.forEach(element => {
+      const separate = element.split(":");
+      if (separate[1].split("|").length > 1) {
+        const prod = { variable: separate[0], production: separate[1].replaceAll("'", "").split("|") };
+        this.objectVariableAndTerminales.push(prod);
+      } else {
+        const production = { variable: separate[0], production: separate[1].replaceAll("'", "").split("") };
+        this.objectVariableAndTerminales.push(production);
+      }
     });
   }
 }
