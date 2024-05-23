@@ -13,10 +13,13 @@ export class AppComponent {
   textArray: string[] = [];
   V: string[] = [];
   T: string[] = [];
+  VWR: string[] = []; //VWR Variables Withouth Recursivity
+  TWR: string[] = []; //TWR Terminales Withouth Recursivity
   objectVarProductions = [{ variable: "", production: "" }];
   objectVariableAndTerminales = [{ variable: "" as string, production: [] as string[] }];
   variableAndTerminalesSinRecursividad = [{ variable: "" as string, production: [[]] as string[][] }];
   variablesAndTerminalsWRecursivityShow = [{ variable: "" as string, production: "" as string }];
+  fileDisplayText: string[] = [];
 
   onDrop(e: any) {
     e.stopPropagation();
@@ -52,6 +55,9 @@ export class AppComponent {
     this.findTerminales(array);
     this.findVariablesAndProductions(array);
     this.cleanRecursive(array);
+    this.fileDisplay();
+    this.findVariablesWithoutRecursity();
+    this.findTerminalsWithoutRecursity();
   }
 
   findVariables(array: string[]) {
@@ -97,11 +103,10 @@ export class AppComponent {
     this.separateVariablesAndProductions(array);
     this.objectVariableAndTerminales.forEach(production => {
       const order = production.production.sort((a, b) => a.length - b.length);
-      console.log(order);
       const variable = production.variable + "!";
       order.forEach(prod => {
         const terminalsInProduction = prod.split("");
-        if (production.variable === terminalsInProduction[0]) {
+        if (production.variable === terminalsInProduction[0]) { //Si al evaluar es variable entra aqui
           const productionUnion = [];
           const productEpsilon = ["e"];
           const product = [];
@@ -112,33 +117,41 @@ export class AppComponent {
           productionUnion.push(product);
           productionUnion.push(productEpsilon);
           this.variableAndTerminalesSinRecursividad.push({ variable: variable, production: productionUnion });
-        } else {
-          const product = [];
-          if (terminalsInProduction.length === 1) {
-            if (this.T.includes(terminalsInProduction[0])) {
-              product.push(terminalsInProduction);
-            } else {
-              terminalsInProduction.push(variable)
-              product.push(terminalsInProduction);
-            }
+          if (!this.VWR.includes(variable)){
+            this.VWR.push(variable);
           }
-          this.variableAndTerminalesSinRecursividad.push({ variable: production.variable, production: product });
+        } else { //De lo contrario es una terminal
+          if (!this.VWR.includes(production.variable)){
+            this.VWR.push(production.variable);
+          }
+          const product = [];
+          const index = this.variableAndTerminalesSinRecursividad.findIndex(li => li.variable === production.variable);
+          if(index >= 0){
+            this.variableAndTerminalesSinRecursividad[index].production.forEach(prd =>
+              product.push(prd)
+            );
+            product.push(terminalsInProduction);
+            this.variableAndTerminalesSinRecursividad[index].production = product;
+          }else{
+            product.push(terminalsInProduction);
+            this.variableAndTerminalesSinRecursividad.push({ variable: production.variable, production: product });
+          }
         }
       });
     });
+    console.log('Despues', this.variableAndTerminalesSinRecursividad);
     this.variablesAndTerminalsWRecursivityShow = [];
     this.variableAndTerminalesSinRecursividad.forEach(line => {
       let productionString = "";
       line.production.forEach(lineProd => {
+        productionString = "";
         lineProd.forEach(lineProduction => {
           productionString += lineProduction;
         });
-        productionString += " | ";
+        this.variablesAndTerminalsWRecursivityShow.push({ variable: line.variable, production: productionString });
       });
-      productionString = productionString.substring(0, productionString.length - 2);
-      this.variablesAndTerminalsWRecursivityShow.push({ variable: line.variable, production: productionString });
     });
-    console.log(this.variableAndTerminalesSinRecursividad);
+    // console.log(this.variableAndTerminalesSinRecursividad);
   }
 
   separateVariablesAndProductions(array: string[]) {
@@ -153,5 +166,52 @@ export class AppComponent {
         this.objectVariableAndTerminales.push(production);
       }
     });
+  }
+
+  fileDisplay() {
+    // console.log('display',this.variableAndTerminalesSinRecursividad);
+    this.variableAndTerminalesSinRecursividad.forEach(line => {
+      const productionsString: string[] = [];
+
+      line.production.forEach(element => {
+        let production = "";
+        element.forEach(position => {
+          production += position;
+        });
+        productionsString.push(production);
+      });
+      let productionString = line.variable + " : " + productionsString.join(" | ");
+      this.fileDisplayText.push(productionString);
+    });
+
+  }
+
+  findVariablesWithoutRecursity(){
+    // this.variableAndTerminalesSinRecursividad.forEach(line => {
+    //   if(!this.VWR.includes(line.variable)){
+    //     this.VWR.push(line.variable);
+    //   }
+    // });
+  }
+
+  findTerminalsWithoutRecursity(){
+    let epsilonExists: boolean = false;
+    this.variableAndTerminalesSinRecursividad.forEach(line => {
+      line.production.forEach(production => {
+        production.forEach(position => {
+          if(!this.VWR.includes(position) && !this.TWR.includes(position)){
+            if(position === "e"){
+              epsilonExists = true;
+            }
+            else{
+              this.TWR.push(position);
+            }
+          }
+        });
+      });
+    });
+    if(epsilonExists){
+      this.TWR.push("e");
+    }
   }
 }

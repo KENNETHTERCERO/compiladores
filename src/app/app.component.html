@@ -11,8 +11,6 @@
         <th style="text-align: center;">V</th>
         <th style="text-align: center;">T</th>
         <th style="text-align: center;">Variables y Producciones</th>
-        <th style="text-align: center;">Grámatica Sin Recursividad</th>
-        <!-- <th style="text-align: center;">Matriz de Transición 2B</th> -->
       </tr>
     </thead>
     <tbody>
@@ -60,6 +58,43 @@
             </tbody>
           </table>
         </td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-bordered">
+    <thead>
+      <tr class="table-primary">
+        <th style="text-align: center;">Sin Recursividad</th>
+        <th style="text-align: center;">V</th>
+        <th style="text-align: center;">T</th>
+        <th style="text-align: center;">Variables y Producciones</th>
+        <th style="text-align: center;">Funcion Primera</th>
+        <th style="text-align: center;">Funcion Siguiente</th>
+        <!-- <th style="text-align: center;">Matriz de Transición 2B</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr><!-- Despliegue de archivo -->
+        <td>
+          <ul *ngFor="let despliegue of fileDisplayText">
+            {{despliegue}}
+          </ul>
+        </td>
+        <td><!-- V -->
+          <table>
+            <tr *ngFor="let variable of VWR">
+              {{variable}}
+            </tr>
+          </table>
+        </td>
+        <td><!-- e -->
+          <table>
+            <tr *ngFor="let terminal of TWR">
+              {{terminal}}
+            </tr>
+          </table>
+        </td>
+        <!-- A -->
         <td>
           <table class="table table-bordered">
             <thead>
@@ -83,7 +118,12 @@
             </tbody>
           </table>
         </td>
+        <td>
 
+        </td>
+        <td>
+
+        </td>
 
         <!--<td> <table>
             <tr class="centerText">
