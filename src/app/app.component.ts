@@ -10,16 +10,28 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  //Array de texto a mostrar con recursividad.
   textArray: string[] = [];
+  //Variables con recursividad
   V: string[] = [];
+  // Terminales con recursividad
   T: string[] = [];
-  VWR: string[] = []; //VWR Variables Withouth Recursivity
-  TWR: string[] = []; //TWR Terminales Withouth Recursivity
+  //VWR Variables sin Recursividad
+  VWR: string[] = [];
+  //TWR Terminales sin Recursividad
+  TWR: string[] = [];
+  //variables y producciones con recursividad
   objectVarProductions = [{ variable: "", production: "" }];
-  objectVariableAndTerminales = [{ variable: "" as string, production: [] as string[] }];
+  //variables y producciones normal
+  objectVariableAndProductions = [{ variable: "" as string, production: [[]] as string[][] }];
+  //producciones sin recursividad
   variableAndTerminalesSinRecursividad = [{ variable: "" as string, production: [[]] as string[][] }];
+  //Variables y produccionese a mostrar en tabla sin recursividad
   variablesAndTerminalsWRecursivityShow = [{ variable: "" as string, production: "" as string }];
+  //Arreglo de texto a mostrar sin recursividad.
   fileDisplayText: string[] = [];
+  //Funcion primero
+  functionFirstArray = [];
 
   onDrop(e: any) {
     e.stopPropagation();
@@ -61,6 +73,7 @@ export class AppComponent {
     this.fileDisplay();
     this.findVariablesWithoutRecursity();
     this.findTerminalsWithoutRecursity();
+    this.functionFirst();
   }
 
   findVariables(array: string[]) {
@@ -104,45 +117,42 @@ export class AppComponent {
   cleanRecursive(array: string[]) {
     this.variableAndTerminalesSinRecursividad = [];
     this.separateVariablesAndProductions(array);
-    this.objectVariableAndTerminales.forEach(production => {
-      const order = production.production.sort((a, b) => a.length - b.length);
-      const variable = production.variable + "!";
-      order.forEach(prod => {
-        const terminalsInProduction = prod.split("");
-        if (production.variable === terminalsInProduction[0]) { //Si al evaluar es variable entra aqui
-          const productionUnion = [];
-          const productEpsilon = ["e"];
-          const product = [];
-          for (let i = 1; i < terminalsInProduction.length; i++) {
-            product.push(terminalsInProduction[i]);
+    //console.log("Se dejan producciones como arrays. ", this.objectVariableAndProductions);
+    this.objectVariableAndProductions.forEach(line => {
+      const productionOrder = line.production.sort((a, b) => a.length - b.length);
+      const productionEpsilon = ["e"];
+      const variableFirst = line.variable + "!";
+      const exist = this.existVariableOnProductions(line.variable, line.production)
+
+      if(!exist && line.production.length === 1) {
+        this.variableAndTerminalesSinRecursividad.push({ variable: line.variable, production: line.production });
+        return;
+      }
+      productionOrder.forEach(production => {
+        if(production[0] === line.variable){
+          const productions: string[][] = [];
+          const productionFirst = production.splice(1, 1);
+          productionFirst.push(variableFirst);
+          productions.push(productionFirst);
+          productions.push(productionEpsilon);
+          this.variableAndTerminalesSinRecursividad.push({ variable: variableFirst, production: productions });
+        }
+        else{
+          const productions: string[][] = [];
+          if(!exist && line.production.length > 1){
+            return;
           }
-          product.push(variable);
-          productionUnion.push(product);
-          productionUnion.push(productEpsilon);
-          this.variableAndTerminalesSinRecursividad.push({ variable: variable, production: productionUnion });
-          if (!this.VWR.includes(variable)){
-            this.VWR.push(variable);
-          }
-        } else { //De lo contrario es una terminal
-          if (!this.VWR.includes(production.variable)){
-            this.VWR.push(production.variable);
-          }
-          const product = [];
-          const index = this.variableAndTerminalesSinRecursividad.findIndex(li => li.variable === production.variable);
-          if(index >= 0){
-            this.variableAndTerminalesSinRecursividad[index].production.forEach(prd =>
-              product.push(prd)
-            );
-            product.push(terminalsInProduction);
-            this.variableAndTerminalesSinRecursividad[index].production = product;
-          }else{
-            product.push(terminalsInProduction);
-            this.variableAndTerminalesSinRecursividad.push({ variable: production.variable, production: product });
-          }
+          production.push(variableFirst);
+          productions.push(production);
+          this.variableAndTerminalesSinRecursividad.push({ variable: line.variable, production: productions });
         }
       });
+
+      if(!exist && line.production.length > 1){
+        this.variableAndTerminalesSinRecursividad.push({ variable: line.variable, production: line.production });
+      }
     });
-    console.log('Despues', this.variableAndTerminalesSinRecursividad);
+    // console.log('Nuevo array', this.variableAndTerminalesSinRecursividad);
     this.variablesAndTerminalsWRecursivityShow = [];
     this.variableAndTerminalesSinRecursividad.forEach(line => {
       let productionString = "";
@@ -157,16 +167,31 @@ export class AppComponent {
     // console.log(this.variableAndTerminalesSinRecursividad);
   }
 
+  existVariableOnProductions(variable: string, production: string[][]){
+    let exist = false;
+    production.forEach(production => {
+      if(variable === production[0]){
+        exist = true;
+      }
+    });
+    return exist;
+  }
+
   separateVariablesAndProductions(array: string[]) {
-    this.objectVariableAndTerminales = [];
+    this.objectVariableAndProductions = [];
     array.forEach(element => {
       const separate = element.split(":");
       if (separate[1].split("|").length > 1) {
-        const prod = { variable: separate[0], production: separate[1].replaceAll("'", "").split("|") };
-        this.objectVariableAndTerminales.push(prod);
+        const productions = separate[1].replaceAll("'", "").split("|");
+        let arrayProductions: string[][] = [[]];
+        arrayProductions = [];
+        productions.forEach(production => arrayProductions.push(production.split("")));
+        this.objectVariableAndProductions.push({ variable: separate[0], production: arrayProductions});
       } else {
-        const production = { variable: separate[0], production: separate[1].replaceAll("'", "").split("") };
-        this.objectVariableAndTerminales.push(production);
+        let arrayProductions: string[][] = [[]];
+        arrayProductions = [];
+        arrayProductions.push(separate[1].replaceAll("'", "").split(""));
+        this.objectVariableAndProductions.push({ variable: separate[0], production: arrayProductions });
       }
     });
   }
@@ -190,11 +215,11 @@ export class AppComponent {
   }
 
   findVariablesWithoutRecursity(){
-    // this.variableAndTerminalesSinRecursividad.forEach(line => {
-    //   if(!this.VWR.includes(line.variable)){
-    //     this.VWR.push(line.variable);
-    //   }
-    // });
+    this.variableAndTerminalesSinRecursividad.forEach(line => {
+      if(!this.VWR.includes(line.variable)){
+        this.VWR.push(line.variable);
+      }
+    });
   }
 
   findTerminalsWithoutRecursity(){
@@ -216,5 +241,22 @@ export class AppComponent {
     if(epsilonExists){
       this.TWR.push("e");
     }
+  }
+
+  functionFirst(){
+    // console.log("functionFirst", this.variableAndTerminalesSinRecursividad);
+    //{fp: string, values: string[]}
+    this.variableAndTerminalesSinRecursividad.forEach(production =>{
+      const moreThanOne = production.production.length > 1;
+      if(moreThanOne){
+        production.production.forEach(production => {
+
+        })
+      }
+    });
+  }
+
+  firstRuleFF(pruction: string[][]){
+
   }
 }

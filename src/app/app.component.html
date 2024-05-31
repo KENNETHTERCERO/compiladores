@@ -70,32 +70,31 @@
         <th style="text-align: center;">Variables y Producciones</th>
         <th style="text-align: center;">Funcion Primera</th>
         <th style="text-align: center;">Funcion Siguiente</th>
-        <!-- <th style="text-align: center;">Matriz de Transición 2B</th> -->
+        <th style="text-align: center;">Tabla de Símbolos</th>
       </tr>
     </thead>
     <tbody>
-      <tr><!-- Despliegue de archivo -->
-        <td>
+      <tr>
+        <td><!-- Despliegue de archivo -->
           <ul *ngFor="let despliegue of fileDisplayText">
             {{despliegue}}
           </ul>
         </td>
-        <td><!-- V -->
+        <td><!-- Variables -->
           <table>
             <tr *ngFor="let variable of VWR">
               {{variable}}
             </tr>
           </table>
         </td>
-        <td><!-- e -->
+        <td><!-- Terminales -->
           <table>
             <tr *ngFor="let terminal of TWR">
               {{terminal}}
             </tr>
           </table>
         </td>
-        <!-- A -->
-        <td>
+        <td><!-- Variables y Producciones -->
           <table class="table table-bordered">
             <thead>
               <td>
@@ -118,38 +117,24 @@
             </tbody>
           </table>
         </td>
-        <td>
+        <td><!-- Funcion Primera -->
 
         </td>
-        <td>
+        <td><!-- Funcion Siguiente -->
 
         </td>
-
-        <!--<td> <table>
-            <tr class="centerText">
-              <td *ngIf="S.length > 0" class="centerText bordeAbajo">Estado</td>
-              <td *ngFor="let l of SmenosEpsilon" class="centerText bordeAbajo">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{l}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              </td>
-              <td class="centerText bordeAbajo">
-                Composición
-              </td>
-            </tr>
-            <tr class="centerText" *ngFor="let estado of AFNEstados">
-              <td>
-                {{estado.estadoInicial}}
-              </td>
-              <td >
-                {{estado.valor[0].estadoFinal}}
-              </td>
-              <td>
-                {{estado.valor[1].estadoFinal}}
-              </td>
-              <td>
-                {{estado.valor[2].composicion}}
-              </td>
-            </tr>
-          </table> </td>-->
+        <td> <!-- Tabla de Simbolos -->
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th *ngIf="!TWR">V</th>
+                <th *ngFor="let terminal of TWR">{{terminal}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let variable of VWR">{{variable}}</tr>
+            </tbody>
+          </table> </td>
 
       </tr>
     </tbody>

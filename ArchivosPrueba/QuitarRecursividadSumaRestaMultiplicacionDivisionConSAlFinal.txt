@@ -1,0 +1,5 @@
+S:S'+'T|T
+T:T'-'F|V
+V:V'*'W|W
+W:W'/'F|F
+F:'a'|(S)
