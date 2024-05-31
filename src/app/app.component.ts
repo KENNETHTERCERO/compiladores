@@ -48,6 +48,9 @@ export class AppComponent {
     this.textArray = [];
     this.V = [];
     this.T = [];
+    this.VWR = [];
+    this.TWR = [];
+    this.fileDisplayText = [];
   }
 
   manageArray(array: string[]) {
