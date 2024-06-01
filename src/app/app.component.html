@@ -118,6 +118,19 @@
           </table>
         </td>
         <td><!-- Funcion Primera -->
+          <table class="table table-bordered">
+            <thead>
+              <!-- <tr>
+                <th *ngIf="!TWR">V</th>
+                <th *ngFor="let terminal of TWR">{{terminal}}</th>
+              </tr> -->
+            </thead>
+            <tbody>
+              <tr *ngFor="let funcion of funcionPrimera">
+                {{funcion}}
+              </tr>
+            </tbody>
+          </table>
 
         </td>
         <td><!-- Funcion Siguiente -->
@@ -134,8 +147,8 @@
             <tbody>
               <tr *ngFor="let variable of VWR">{{variable}}</tr>
             </tbody>
-          </table> </td>
-
+          </table>
+        </td>
       </tr>
     </tbody>
   </table>

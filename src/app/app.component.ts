@@ -36,6 +36,7 @@ export class AppComponent {
   fileDisplayText: string[] = [];
   //Funcion primero
   functionFirstArray = [{ fp: "" as string, values: [] as string[] }];
+  funcionPrimera: string[] = [];
   //Epsilon
   productionEpsilon = ["e"];
 
@@ -80,6 +81,7 @@ export class AppComponent {
     this.findVariablesWithoutRecursity();
     this.findTerminalsWithoutRecursity();
     this.functionFirst();
+    this.funcionPrimeraArreglada();
   }
 
   findVariables(array: string[]) {
@@ -301,6 +303,10 @@ export class AppComponent {
     console.log("evaluando", this.functionFirstArray);
   }
 
+  formarDatosFuncionPrimera(){
+    const functionPrimera = [];
+  }
+
   ruleOneFunctionFirst(variable: string){
     const index = this.variableAndTerminalesSinRecursividad.findIndex(production => production.variable === variable);
     if(index === this.variableAndTerminalesSinRecursividad.length - 1){
@@ -347,5 +353,12 @@ export class AppComponent {
 
   isEpsilon(value: string){
     return this.productionEpsilon[0] === value;
+  }
+
+  funcionPrimeraArreglada(){
+    this.functionFirstArray.forEach(func => {
+      const fun = `${func.fp} {${func.values.join(',')}}`;
+      this.funcionPrimera.push(fun);
+    });
   }
 }
