@@ -252,56 +252,53 @@ export class AppComponent {
   }
 
   functionFirst(){
-    // console.log("functionFirst", this.variableAndTerminalesSinRecursividad);
-    //{fp: string, values: string[]}
     this.functionFirstArray = [];
     this.variableAndTerminalesSinRecursividad.forEach(production =>{
       const functionF = {fp: `P(${production.variable})`, values: [] as string[] };
-      const index = this.variableAndTerminalesSinRecursividad.findIndex(p => p.variable === production.variable) + 1;
-      const productions = production.productions;
-      const moreThanOne = productions.length > 1;
-      const productionsClone = Object.assign(this.variableAndTerminalesSinRecursividad);
-      const terminal: string[] = [];
-      if(moreThanOne){
-        productions.forEach(prod => {
-          console.log("evaluando si es variable", prod[0]);
-          if(this.isVariable(prod[0])){
-            const contador = this.ruleOneFunctionFirst(prod[0]);
-            console.log("Retorna regla contador", contador);
-            if(contador.length > 1){
-              contador.forEach(produc => {
-                terminal.push(produc);
-              });
-            }else{
-              terminal.push(contador[0]);
-            }
-          }
-          else if(this.isEpsilon(prod[0])){
-            terminal.push(this.productionEpsilon[0]);
-          }
-          else if(this.isTerminal(prod[0])){
-            terminal.push(prod[0]);
-          }
-        });
-        functionF.values = terminal;
-      }
-      else{
-        if(this.isVariable(productions[0][0])){
-          // console.log("productions[0][0]", productions[0][0]);
-          console.log("retorna regla", this.ruleOneFunctionFirst(productions[0][0]));
-          terminal.push();
+      console.log("functionFirst", production);
+      production.productions.forEach(produccion => {
+        if(this.isTerminal(produccion[0])){
+          functionF.values = this.primerRegla(production);
         }
-        else if(this.isEpsilon(productions[0][0])){
-          terminal.push(this.productionEpsilon[0]);
+        if(this.isVariable(produccion[0])){
+          functionF.values = this.terceraRegla(produccion[0]);
         }
-        else if(this.isTerminal(productions[0][0])){
-          terminal.push(productions[0][0]);
-        }
-      }
+      });
       this.functionFirstArray.push(functionF);
     });
+  }
 
-    console.log("evaluando", this.functionFirstArray);
+  primerRegla(produccion: Produccion): string[]{
+    const retorno: string[] = [];
+    produccion.productions.forEach(production => {
+      if(this.isTerminal(production[0]) || this.isEpsilon(production[0])){
+        retorno.push(production[0]);
+      }
+    });
+    return retorno;
+  }
+
+  terceraRegla(variable: string): string[]{
+    const retorno: string[] = [];
+    let encontrada = false;
+    let posicion = 0;
+    do{
+      if(this.variableAndTerminalesSinRecursividad[posicion].variable === variable){
+        this.variableAndTerminalesSinRecursividad[posicion].productions.forEach(production => {
+          if(this.isVariable(production[0])){
+            variable = production[0];
+          }
+          if(this.isTerminal(production[0]) && !this.isEpsilon(production[0])){
+            retorno.push(production[0]);
+            if(posicion + 1 === this.variableAndTerminalesSinRecursividad.length){
+              encontrada = true;
+            }
+          }
+        });
+      }
+      posicion++;
+    } while(encontrada === false);
+    return retorno;
   }
 
   formarDatosFuncionPrimera(){
@@ -361,5 +358,22 @@ export class AppComponent {
       const fun = `${func.fp} {${func.values.join(',')}}`;
       this.funcionPrimera.push(fun);
     });
+  }
+
+  makeSymbolTable(variable: string){
+    const index = this.functionFirstArray.findIndex(line => line.fp === `P(${variable})`);
+    const posiciones = [];
+    for(let i = 0; i < this.TWR.length; i++){
+      posiciones.push("");
+    }
+    this.functionFirstArray[index].values.forEach(value => {
+      let indexTerminal = this.TWR.findIndex(terminal => terminal === value);
+      this.variablesAndTerminalsWRecursivityShow
+        .filter(production => production.variable === variable && !this.isEpsilon(production.production[0]))
+        .forEach(production => {
+          posiciones[indexTerminal] = production.production;
+        });
+    });
+    return posiciones;
   }
 }

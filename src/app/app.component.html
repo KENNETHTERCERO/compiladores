@@ -1,4 +1,4 @@
-<div class="content table-responsive-xl" style="width: 100%; height: 100%;" role="main" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
+<div class="content" style="width: 100%; height: 100%;" role="main" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
   <!-- <div class="card-container">
     <a class="card">
       Arrastre un archivo
@@ -105,13 +105,13 @@
               </td>
             </thead>
             <tbody>
-              <tr *ngFor="let object of variablesAndTerminalsWRecursivityShow">
+              <tr *ngFor="let objeto of variablesAndTerminalsWRecursivityShow">
                 <td>
-                  {{object.variable}}
+                  {{objeto.variable}}
                 </td>
                 <td>
                   <!-- <td [innerHTML]="object.production"> -->
-                  {{object.production}}
+                  {{objeto.production}}
                 </td>
               </tr>
             </tbody>
@@ -134,18 +134,20 @@
 
         </td>
         <td><!-- Funcion Siguiente -->
-
         </td>
         <td> <!-- Tabla de Simbolos -->
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th *ngIf="!TWR">V</th>
+                <th>V/T</th>
                 <th *ngFor="let terminal of TWR">{{terminal}}</th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let variable of VWR">{{variable}}</tr>
+              <tr *ngFor="let variable of VWR">
+                <td>{{variable}}</td>
+                <td *ngFor="let terminal of makeSymbolTable(variable)">{{terminal}}</td>
+              </tr>
             </tbody>
           </table>
         </td>
