@@ -15,7 +15,7 @@ interface Produccion{
 })
 export class AppComponent {
   //Array de texto a mostrar con recursividad.
-  textArray: string[] = [];
+  textArray: string[] = ["Arrastre un archivo en esta area"];
   //Variables con recursividad
   V: string[] = [];
   // Terminales con recursividad
@@ -33,7 +33,7 @@ export class AppComponent {
   //Variables y produccionese a mostrar en tabla sin recursividad
   variablesAndTerminalsWRecursivityShow = [{ variable: "" as string, production: "" as string }];
   //Arreglo de texto a mostrar sin recursividad.
-  fileDisplayText: string[] = [];
+  fileDisplayText: string[] = ["Arrastre un archivo en esta area"];
   //Funcion primero
   functionFirstArray = [{ fp: "" as string, values: [] as string[] }];
   funcionPrimera: string[] = [];
@@ -64,12 +64,12 @@ export class AppComponent {
   }
 
   cleanObjects() {
-    this.textArray = [];
+    this.textArray = ["Arrastre un archivo en esta area"];
     this.V = [];
     this.T = [];
     this.VWR = [];
     this.TWR = [];
-    this.fileDisplayText = [];
+    this.fileDisplayText = ["Arrastre un archivo en esta area"];
   }
 
   manageArray(array: string[]) {
@@ -204,6 +204,7 @@ export class AppComponent {
   }
 
   fileDisplay() {
+    this.fileDisplayText = [];
     // console.log('display',this.variableAndTerminalesSinRecursividad);
     this.variableAndTerminalesSinRecursividad.forEach(line => {
       const productionsString: string[] = [];

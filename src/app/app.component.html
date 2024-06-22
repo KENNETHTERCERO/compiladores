@@ -1,13 +1,13 @@
-<div class="content table-responsive-xl" role="main">
-  <div class="card-container" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
+<div class="content table-responsive-xl" style="width: 100%; height: 100%;" role="main" (drop)="onDrop($event)" (dragover)="allowDrop($event)">
+  <!-- <div class="card-container">
     <a class="card">
       Arrastre un archivo
     </a>
-  </div>
+  </div> -->
   <table class="table table-bordered">
     <thead>
-      <tr class="table-primary">
-        <th style="text-align: center;">Despliegue de archivo</th>
+      <tr class="table-info">
+        <th style="text-align: center;">Despliegue de archivo | Recursividad</th>
         <th style="text-align: center;">V</th>
         <th style="text-align: center;">T</th>
         <th style="text-align: center;">Variables y Producciones</th>
@@ -63,8 +63,8 @@
   </table>
   <table class="table table-bordered">
     <thead>
-      <tr class="table-primary">
-        <th style="text-align: center;">Sin Recursividad</th>
+      <tr class="table-success">
+        <th style="text-align: center;">Despliegue de archivo | Sin Recursividad</th>
         <th style="text-align: center;">V</th>
         <th style="text-align: center;">T</th>
         <th style="text-align: center;">Variables y Producciones</th>
